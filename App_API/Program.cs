@@ -35,6 +35,9 @@ namespace App_API
             builder.Services.AddScoped<IPublisherService, PublisherService>();
             builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
+            builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",

@@ -9,6 +9,12 @@ namespace App_API.Repositories
         {
             _context = context;
         }
+
+        public List<Role> GetRoles()
+        {
+            return _context.Roles.ToList();
+        }
+
         public bool IsRoleExist(int roleId)
         {
             return _context.Roles.Any(x => x.RoleId == roleId);
