@@ -81,6 +81,8 @@ namespace App_API.Services
             author.State= authorUpdateRequest.State;
             author.Zip = authorUpdateRequest.Zip;
             author.EmailAddress= authorUpdateRequest.EmailAddress;
+
+            _authorRepository.Update(author);
         }
 
         private void checkAuthorExist(int id)

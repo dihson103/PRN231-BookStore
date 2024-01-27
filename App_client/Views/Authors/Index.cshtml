@@ -1,4 +1,5 @@
-﻿
+﻿@using App_client.Dtos.Authors;
+@model List<AuthorResponse>
 @{
 }
 <div class="text-center">
@@ -12,59 +13,62 @@
 
 </style>
 
+
+<div class="d-flex justify-content-end mb-2">
+    <button class="btn btn-info" type="button" data-toggle="modal" data-target="#exampleModal" onclick="displayAuthor(0)">Add Author</button>
+</div>
+
 <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover">
+    @if (ViewData.ModelState.Any(m => m.Value.Errors.Any()))
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var key in ViewData.ModelState.Keys)
+                {
+                    foreach (var error in ViewData.ModelState[key].Errors)
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+    @if (Model != null && Model.Count > 0)
+    {
+        <table class="table table-bordered table-striped table-hover">
         <thead class="bg-secondary text-white">
             <tr>
-                <th>Description</th>
-                <th>Tax Payable ($)</th>
-                <th>Paid through ITC</th>
-                <th>Tax/CESS Paid in cash ($)</th>
+                <th>AuthorId</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>City</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Integrated Tax</td>
-                <td>25,828.00</td>
-                <td>25,828.00</td>
-                <td>25,828.00</td>
-                <td>
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" onclick="displayAuthor('1')">Edit</button>
-                    <a href="#" class="btn btn-primary active">Delete</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Integrated Tax</td>
-                <td>25,828.00</td>
-                <td>25,828.00</td>
-                <td>25,828.00</td>
-                <td>
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" onclick="displayAuthor('2')">Edit</button>
-                    <a href="#" class="btn btn-primary active">Delete</a>
-                </td>
-            </tr>
-            <tr>
-                <td>State/UT Tax</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-            </tr>
-            <tr>
-                <td>CESS Tax</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-            </tr>
+                @foreach(var item in Model)
+                {
+                    <tr>
+                        <td>@item.AuthorId</td>
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.City</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" onclick="displayAuthor(@item.AuthorId)">Edit</button>
+                            <a href="/Authors/Delete?id=@item.AuthorId" class="btn btn-primary active">Delete</a>
+                        </td>
+                    </tr>
+                }
+            
         </tbody>
     </table>
+    }
+    
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -72,12 +76,72 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="authorId">
-                
-            </div>
+            <form class="modal-body" id="authorForm" method="post">
+                <input type="text" class="form-control" name="authorId" id="authorId" hidden>
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="firstName" class="form-label">First name</label>
+                            <input type="text" class="form-control" name="firstname" id="firstName" placeholder="First name">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="lastName" class="form-label">Last name</label>
+                            <input type="text" class="form-control" name="lastname" id="lastName" placeholder="Last name">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address" id="address" placeholder="Address">
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="row">
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" name="city" id="city" placeholder="City">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="state" class="form-label">State</label>
+                            <input type="text" class="form-control" name="state" id="state" placeholder="State">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="zip" class="form-label">Zip</label>
+                            <input type="text" class="form-control" id="zip" name="zip" placeholder="zip">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                        </div>
+                    </div>
+                </div>
+               
+            </form>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Save changes</button>
             </div>
         </div>
     </div>
@@ -85,11 +149,45 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-    const displayAuthor = (id) => {
-        document.getElementById('authorId').innerHTML = `<span>Author has id: ${id}</span>`
+    const getProductApi = (id) => {
+        $.ajax({
+            url: 'https://localhost:7070/api/Authors/' + id,
+            method: 'GET',
+            success: (result) => {
+                const data = result.data
+                $('#firstName').val(data.firstName);
+                $('#lastName').val(data.lastName);
+                $('#phone').val(data.phone);
+                $('#address').val(data.address);
+                $('#city').val(data.city);
+                $('#state').val(data.state);
+                $('#zip').val(data.zip);
+                $('#email').val(data.emailAddress);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
     }
+
+    const displayAuthor = (id) => {
+        if(id == 0){
+            document.getElementById('exampleModalLabel').innerHTML = 'Add new author'
+            document.getElementById('authorForm').action = "/Authors/Add"
+        }else{
+            document.getElementById('exampleModalLabel').innerHTML = 'Update author'
+            document.getElementById('authorForm').action = "/Authors/Update"
+            document.getElementById('authorId').value = id
+            getProductApi(id)
+        }
+    }
+
+    const submitForm = () => {
+        document.getElementById('authorForm').submit()
+    }
+
 </script>
 
 

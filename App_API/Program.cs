@@ -41,7 +41,7 @@ namespace App_API
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("https://localhost:7243")
+                    builder => builder.WithOrigins("http://localhost:5051")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader());
             });
