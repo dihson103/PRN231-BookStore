@@ -175,6 +175,14 @@
     const displayAuthor = (id) => {
         if(id == 0){
             document.getElementById('exampleModalLabel').innerHTML = 'Add new author'
+            $('#firstName').val('');
+                $('#lastName').val('');
+                $('#phone').val('');
+                $('#address').val('');
+                $('#city').val('');
+                $('#state').val('');
+                $('#zip').val('');
+                $('#email').val('');
             document.getElementById('authorForm').action = "/Authors/Add"
         }else{
             document.getElementById('exampleModalLabel').innerHTML = 'Update author'
