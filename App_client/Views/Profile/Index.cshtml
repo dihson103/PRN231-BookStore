@@ -1,0 +1,12 @@
+﻿@using System.Security.Claims;
+
+@{
+    var user = Context.User;
+    var isAdmin = user.HasClaim(c => c.Type == "Role" && c.Value == "1");
+    var username = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var fullname = user.FindFirst(ClaimTypes.Name)?.Value;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome @fullname to profile</h1>
+</div>

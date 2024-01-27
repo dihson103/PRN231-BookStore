@@ -1,0 +1,16 @@
+﻿@using System.Security.Claims;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@{
+    var user = Context.User;
+    var isAdmin = user.HasClaim(c => c.Type == "Role" && c.Value == "1");
+    var username = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var fullname = user.FindFirst(ClaimTypes.Name)?.Value;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome @fullname</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>

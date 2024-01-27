@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - App_client</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/App_client.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @{
+        var user = Context.User;
+        var isAdmin = user.HasClaim(c => c.Type == "Role" && c.Value == "1");
+        var isAuthenticated = user.Identity.IsAuthenticated;
+    }
+
+    <div class="wrapper d-flex align-items-stretch vd-100">
+        <nav id="sidebar" style="background-color: rgb(31, 31, 71);">
+            <div style="background-color: rgb(40, 72, 118);height: 70px;" class="d-flex align-items-center justify-content-center text-white">
+                <div style="color: rgb(180, 180, 37);font-size: 30px;font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;font-style: italic;">
+                    Bookstore
+                </div>
+            </div>
+            <div class="p-4 pt-2">
+                <ul class="list-unstyled components mb-5">
+                    <li id="Home">
+                        <a href="../Home">Home</a>
+                    </li>
+                    @if (isAdmin)
+                    {
+                        <li id="Users">
+                            <a href="../Users">Users</a>
+                        </li>
+                        <li id="Books">
+                            <a href="../Books">Books</a>
+                        </li>
+                        <li id="Authors">
+                            <a href="../Authors">Authors</a>
+                        </li>
+                        <li id="Publishers">
+                            <a href="../Publishers">Publishers</a>
+                        </li>
+                    }
+                </ul>
+
+            </div>
+        </nav>
+
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg" style="background-color: rgb(246, 241, 241);">
+                <div class="container-fluid">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            @if (isAuthenticated)
+                            {
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="../Profile">MyProfile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../Auth/Logout">Logout</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="../Auth">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../Auth/Register">Register</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        var currentUrl = window.location.href;
+        var url = new URL(currentUrl);
+        var pathSegments = url.pathname.split('/');
+        var lastSegment = pathSegments.pop();
+
+        document.getElementById(lastSegment ? lastSegment : "Home").classList.add("active")
+
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿
+@{
+}
+<h1 id="message" style="color: red;"></h1>
+
+<script>
+
+    function getParameterByName(name) {
+
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(window.location.search);
+
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    var paramValue = getParameterByName('Message');
+    document.getElementById("message").innerHTML = paramValue;
+</script>
