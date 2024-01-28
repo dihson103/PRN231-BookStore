@@ -1,12 +1,61 @@
 ﻿@using System.Security.Claims;
-
+@using App_client.Dtos.Users;
+@model UserResponse
 @{
     var user = Context.User;
     var isAdmin = user.HasClaim(c => c.Type == "Role" && c.Value == "1");
     var username = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var fullname = user.FindFirst(ClaimTypes.Name)?.Value;
 }
+<h1 id="message" style="color: red;"></h1>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome @fullname to profile</h1>
+<div class="d-flex justify-content-center">
+    <form action="/Profile/Update" method="post" style="width: 600px" class="">
+    <input type="text" name="id" value="@Model.UserId" hidden />
+    <div class="mb-1">
+        <label for="firstName" class="form-label">First name</label>
+        <input type="text" class="form-control" name="firstName" value="@Model.FirstName">
+    </div>
+    <div class="mb-1">
+        <label for="middleName" class="form-label">Middle name</label>
+        <input type="text" class="form-control" name="middleName" value="@Model.MiddleName">
+    </div>
+    <div class="mb-1">
+        <label for="lastName" class="form-label">Last name</label>
+        <input type="text" class="form-control" name="lastName" value="@Model.LastName">
+    </div>
+    <div class="mb-1">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" value="@Model.EmailAddress">
+    </div>
+    <div class="mb-1">
+        <label for="publisher" class="form-label">Publisher</label>
+        <select class="form-control" id="publisher" name="pubId" asp-for="PubId" asp-items="ViewBag.PubId"></select>
+    </div>
+    <div class="mb-1">
+        <label for="hireDate" class="form-label">Hire date</label>
+        <input type="datetime-local" class="form-control" name="hireDate" asp-for="HireDate" >
+    </div>
+    <div class="mb-1">
+        <label for="source" class="form-label">Source</label>
+        <input type="text" class="form-control" name="source" value="@Model.Source">
+    </div>
+    <button type="submit" class="btn btn-primary">Update profile</button>
+</form>
 </div>
+
+<script>
+
+    function getParameterByName(name) {
+
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(window.location.search);
+
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    var paramValue = getParameterByName('Message');
+    document.getElementById("message").innerHTML = paramValue;
+</script>
