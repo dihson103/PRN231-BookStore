@@ -1,6 +1,190 @@
-﻿
+﻿@using App_client.Dtos.Books;
+@model List<BookResponse>
 @{
 }
 <div class="text-center">
     <h1 class="display-4">Welcome to books</h1>
 </div>
+<style>
+    .table-bordered th, .table-bordered td {
+        border: 1px solid #acbfd2;
+    }
+    a {
+        color: blue;
+    }
+</style>
+
+<div>
+    <form class="row" method="get" action="/Books">
+        <div class="col row">
+            <label class="col-sm-4 col-form-label">Book's name</label>
+            <input class="form-control col-sm-8" id="searchName" name="searchName" type="text" placeholder="Book's name" />
+        </div>
+        <div class="col row">
+            <label class="col-sm-4 col-form-label">Book's price</label>
+            <input class="form-control col-sm-8" id="searchPrice" name="searchPrice" type="text" placeholder="Price" />
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-info">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="d-flex justify-content-end mb-2">
+    <button class="btn btn-info" type="button" data-toggle="modal" data-target="#exampleModal" onclick="displayBook(0)">Add Book</button>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="bg-secondary text-white">
+            <tr>
+                <th>Book id</th>
+                <th>Price</th>
+                <th>Title</th>
+                <th>PublishedDate</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var book in Model)
+            {
+                <tr>
+                    <td>@book.BookId</td>
+                    <td>@book.YtdSales</td>
+                    <td>@book.Title</td>
+                    <td>@book.PublishedDate</td>
+                    <td>
+                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" onclick="displayBook(@book.BookId)">Edit</button>
+                        <a href="../Books/Delete?id=@book.BookId" class="btn btn-primary">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form class="modal-body" method="post" id="bookForm">
+                <input type="text" name="id" hidden id="bookId" />
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="title" class="form-label">Book title</label>
+                            <input type="email" class="form-control" name="title" id="title" placeholder="Book title">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="advance" class="form-label">Advance</label>
+                            <input type="text" class="form-control" name="advance" id="advance" placeholder="Advance">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="royalty" class="form-label">Royalty</label>
+                            <input type="text" class="form-control" name="royalty" id="royalty" placeholder="Royalty">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="ytdSales" class="form-label">Price</label>
+                            <input type="text" class="form-control" name="ytdSales" id="ytdSales" placeholder="Price">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-1">
+                            <label for="publishedDate" class="form-label">PublishedDate</label>
+                            <input type="datetime-local" class="form-control" id="publishedDate" name="publishedDate">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-1" id="roleForm">
+                            <label for="publisher" class="form-label">Publisher</label>
+                            <select class="form-control" id="publisher" name="publisher" asp-items="ViewBag.PubId"></select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-1">
+                    <label for="notes" class="form-label">Notes</label>
+                    <input type="text" class="form-control" id="notes" name="notes" placeholder="Notes">
+                </div>
+
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    const getBookById = (id) => {
+        $.ajax({
+            url: 'https://localhost:7070/api/Books/' + id,
+            method: 'GET',
+            success: (result) => {
+                const data = result.data
+                $('#title').val(data.title);
+                $('#advance').val(data.advance);
+                $('#royalty').val(data.royalty);
+                $('#ytdSales').val(data.ytdSales);
+                $('#publishedDate').val(data.publishedDate);
+                $('#publisher').val(data.pubId);
+                $('#notes').val(data.notes);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+    }
+
+    const displayBook = (id) => {
+        if(id == 0){
+            document.getElementById('exampleModalLabel').innerHTML = 'Add new book'
+            document.getElementById('bookForm').action = '/Books/Add'
+        }else{
+            document.getElementById('exampleModalLabel').innerHTML = 'Update book has is ' + id
+            document.getElementById('bookId').value = id
+            document.getElementById('bookForm').action = '/Books/Update'
+            getBookById(id)
+        }
+    }
+
+    const submitForm = () => {
+        document.getElementById('bookForm').submit()
+    }
+
+    function getParameterByName(name) {
+
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(window.location.search);
+
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    var searchName = getParameterByName('searchName');
+    var searchPrice = getParameterByName('searchPrice');
+    document.getElementById("searchName").value = searchName;
+    document.getElementById("searchPrice").value = searchPrice;
+</script>

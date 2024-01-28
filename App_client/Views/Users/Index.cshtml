@@ -36,11 +36,12 @@
                 <tr>
                     <td>@user.UserId</td>
                     <td>@user.EmailAddress</td>
-                    <td>@user.FullName</td>
+                    <td>@(user.FirstName + " " + user.MiddleName + " " + user.LastName)</td>
                     <td>@user.RoleId</td>
                     <td>
                         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" onclick="displayUser(@user.UserId)">Edit</button>
-                        <a href="#" class="btn btn-primary">Delete</a>
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalRole" onclick="displayRole('@user.UserId', '@user.RoleId')">Change role</button>
+                        <a href="../Users/Delete?id=@user.UserId" class="btn btn-primary">Delete</a>
                     </td>
                 </tr>
             }
@@ -59,18 +60,19 @@
                 </button>
             </div>
 
-            <form class="modal-body">
+            <form class="modal-body" method="post" id="userForm">
+                <input type="text" name="id" hidden id="userId" />
                 <div class="row">
                     <div class="col">
                         <div class="mb-1">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email address">
+                            <input type="email" class="form-control" name="email" id="exampleInputEmail1" placeholder="Email address">
                         </div>
                     </div>
                     <div class="col">
                         <div class="mb-1" id="passwordForm">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="source" placeholder="Password">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                         </div>
                     </div>
                 </div>
@@ -79,44 +81,75 @@
                     <div class="col-md-4">
                         <div class="mb-1">
                             <label for="firstName" class="form-label">First name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="First name">
+                            <input type="text" class="form-control" name="firstname" id="firstName" placeholder="First name">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-1">
                             <label for="middleName" class="form-label">Middle name</label>
-                            <input type="text" class="form-control" id="middleName" placeholder="Middle name">
+                            <input type="text" class="form-control" name="middlename" id="middleName" placeholder="Middle name">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="mb-1">
                             <label for="lastName" class="form-label">Last name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="Last name">
+                            <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Last name">
                         </div>
                     </div>
                 </div>
                 
                 <div class="mb-1">
                     <label for="source" class="form-label">Source</label>
-                    <input type="text" class="form-control" id="source" placeholder="Source">
+                    <input type="text" class="form-control" id="source" name="source" placeholder="Source">
                 </div>
-                
+                <div class="mb-1" id="roleForm">
+                    <label for="role" class="form-label">Role</label>
+                    <select class="form-control" id="role" name="role" asp-items="ViewBag.RoleId"></select>
+                </div>
                 <div class="mb-1">
                     <label for="publisers" class="form-label">Publisher</label>
-                    <input type="text" class="form-control" id="publisers" placeholder="Publisher">
+                    <select class="form-control" id="publisers" name="publisherId" asp-items="ViewBag.PubId"></select>
                 </div>
                 <div class="mb-1">
                     <label for="hireDate" class="form-label">Hire date</label>
-                    <input type="datetime-local" class="form-control" id="hireDate">
+                    <input type="datetime-local" class="form-control" name="hireDate" id="hireDate">
                 </div>
 
-                <div>
-                    <select class="form-control" id="role" asp-items="ViewBag.RoleId"></select>
-                </div>
             </form>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModalRole" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roleTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form class="modal-body" method="post" action="/Users/ChangeRole" id="changeRoleForm">
+                <input type="text" id="userUpdateId" name="userId" hidden />
+                <div class="mb-1">
+                    <label for="role" class="form-label">Old Role</label>
+                    <select class="form-control roleValue" id="oldRole" asp-items="ViewBag.RoleId"></select>
+                </div>
+
+                <div class="mb-1">
+                    <label for="role" class="form-label">New Role</label>
+                    <select class="form-control roleValue" name="roleId" id="newRole" asp-items="ViewBag.RoleId"></select>
+                </div>
+
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitChangeRole()">Save changes</button>
             </div>
         </div>
     </div>
@@ -124,17 +157,59 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+    const getUserById = (id) => {
+        $.ajax({
+            url: 'https://localhost:7070/api/Users/' + id,
+            method: 'GET',
+            success: (result) => {
+                const data = result.data
+                $('#userId').val(data.userId);
+                $('#exampleInputEmail1').val(data.emailAddress);
+                $('#firstName').val(data.firstName);
+                $('#middleName').val(data.middleName);
+                $('#lastName').val(data.lastName);
+                $('#source').val(data.source);
+                $('#publisers').val(data.pubId);
+                $('#hireDate').val(data.hireDate);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+    }
+
     const displayUser = (id) => {
         if(id == 0){
             document.getElementById('exampleModalLabel').innerHTML = 'Add new user'
             document.getElementById('passwordForm').hidden = false
+            document.getElementById('roleForm').hidden = false
+            document.getElementById('userForm').action = '/Users/Add'
         }else{
             document.getElementById('exampleModalLabel').innerHTML = 'Update user has is ' + id
             document.getElementById('passwordForm').hidden = true
+            document.getElementById('roleForm').hidden = true
+            document.getElementById('userForm').action = '/Users/Update'
+            getUserById(id)
         }
+    }
 
-        document.getElementById('authorId').innerHTML = `<span>Author has id: ${id}</span>`
+    const submitForm = () => {
+        document.getElementById('userForm').submit()
+    }
+
+    const displayRole = (id, roleId) => {
+        document.getElementById('roleTitle').innerHTML = 'Change role of user has id: ' + id 
+        document.getElementById('userUpdateId').value = id
+        var roleValueElements = document.getElementsByClassName('roleValue');
+
+        for (var i = 0; i < roleValueElements.length; i++) {
+            roleValueElements[i].value = roleId;
+        }
+    }
+
+    const submitChangeRole = () => {
+        document.getElementById('changeRoleForm').submit()
     }
 </script>

@@ -64,16 +64,13 @@ namespace App_client.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Failed to add author.");
-                        return View();
+                        return RedirectToAction("Index", "Authors", new {Message = "Failed to add author." });
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception for troubleshooting
-                ModelState.AddModelError("", "An error occurred while processing your request.");
-                return View();
+                return RedirectToAction("Index", "Authors", new { Message = "An error occurred while processing your request." });
             }
         }
 
@@ -107,16 +104,13 @@ namespace App_client.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Failed to update author.");
-                        return View();
+                        return RedirectToAction("Index", "Authors", new { Message = "Failed to update author." });
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception for troubleshooting
-                ModelState.AddModelError("", "An error occurred while processing your request.");
-                return View();
+                return RedirectToAction("Index", "Authors", new { Message = "An error occurred while processing your request." });
             }
         }
 
@@ -131,8 +125,7 @@ namespace App_client.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Failed to delete author.");
-                    return View();
+                    return RedirectToAction("Index", "Authors", new {Message = "Failed to delete author." });
                 }
             }
         }

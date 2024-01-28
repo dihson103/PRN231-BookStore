@@ -38,8 +38,8 @@ namespace App_API.Controllers
             return Ok(new SuccessResponse() { Message = $"Delete user has id: {id} success!"});
         }
 
-        [HttpPatch("{id}/change-user-role")]
-        public IActionResult ChangeUserRole([FromRoute] int id, [FromBody]int roleId)
+        [HttpPatch("{id}/change-user-role/{roleId}")]
+        public IActionResult ChangeUserRole([FromRoute] int id, [FromRoute]int roleId)
         {
             _userService.ChangeUserRole(id, roleId);
             return Ok(new SuccessResponse() { Message = $"Update user's role has id: {id} success!" });

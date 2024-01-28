@@ -87,3 +87,8 @@ D:\ky8\1_PRN231\Project\Assignment_02\App_API\obj\Debug\net6.0\refint\App_API.dl
 D:\ky8\1_PRN231\Project\Assignment_02\App_API\obj\Debug\net6.0\App_API.pdb
 D:\ky8\1_PRN231\Project\Assignment_02\App_API\obj\Debug\net6.0\App_API.genruntimeconfig.cache
 D:\ky8\1_PRN231\Project\Assignment_02\App_API\obj\Debug\net6.0\ref\App_API.dll
+D:\ky8\1_PRN231\Project\Assignment_02\App_API\bin\Debug\net6.0\Microsoft.AspNetCore.OData.dll
+D:\ky8\1_PRN231\Project\Assignment_02\App_API\bin\Debug\net6.0\Microsoft.OData.Core.dll
+D:\ky8\1_PRN231\Project\Assignment_02\App_API\bin\Debug\net6.0\Microsoft.OData.Edm.dll
+D:\ky8\1_PRN231\Project\Assignment_02\App_API\bin\Debug\net6.0\Microsoft.OData.ModelBuilder.dll
+D:\ky8\1_PRN231\Project\Assignment_02\App_API\bin\Debug\net6.0\Microsoft.Spatial.dll

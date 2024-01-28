@@ -1,4 +1,5 @@
 ﻿using App_API.Dtos.Authors;
+using App_API.Dtos.Books;
 using App_API.Dtos.Publishers;
 using App_API.Dtos.Roles;
 using App_API.Dtos.Users;
@@ -11,8 +12,8 @@ namespace App_API.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<User, UserResponse>()
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.MiddleName} {src.LastName}"));
+            CreateMap<User, UserResponse>();
+                //.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.MiddleName} {src.LastName}"));
             CreateMap<UserAuthRequest, User>();
             CreateMap<UserAdminCreateRequest, User>();
 
@@ -25,6 +26,10 @@ namespace App_API.Helpers
             CreateMap<Author, AuthorResponse>();
             CreateMap<AuthorCreateRequest, Author>();
             CreateMap<AuthorUpdateRequest, Author>();
+
+            CreateMap<Book, BookResponse>();
+            CreateMap<BookCreateRequest, Book>();
+            CreateMap<BookUpdateRequest, Book>();
         }
     }
 }

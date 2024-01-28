@@ -78,7 +78,6 @@ namespace App_API.Services
             if (user == null) throw new MyException((int)HttpStatusCode.NotFound, "UserService:: Wrong email or password!");
 
             var userResponse = _mapper.Map<UserResponse>(user);
-            userResponse.FullName = $"{user.FirstName} {user.MiddleName} {user.LastName}";
 
             return userResponse;
 
@@ -147,6 +146,7 @@ namespace App_API.Services
             user.LastName = request.LastName;
             user.MiddleName = request.MiddleName;
             user.HireDate = request.HireDate;
+            if(request.PubId != 0) user.PubId = request.PubId;
         }
 
         public void ChangePassord(int id, UserChangePasswordRequest changePasswordRequest)

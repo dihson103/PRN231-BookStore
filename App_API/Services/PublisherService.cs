@@ -25,7 +25,7 @@ namespace App_API.Services
 
         public void CheckPublisherExist(int? id)
         {
-            if (id == null) return;
+            if (id == 0) return;
 
             var isPublisherExist = _publisherRepository.IsPublisherExist((int)id);
             if (!isPublisherExist) 

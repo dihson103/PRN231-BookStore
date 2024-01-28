@@ -3,6 +3,7 @@ using App_API.Models;
 using App_API.Repositories;
 using App_API.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 
 namespace App_API
@@ -15,7 +16,8 @@ namespace App_API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddOData(option => 
+                option.Select().Filter());
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -37,6 +39,9 @@ namespace App_API
 
             builder.Services.AddScoped<IAuthorService, AuthorService>();
             builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
 
             builder.Services.AddCors(options =>
             {
